@@ -29,6 +29,23 @@ var albumPicasso = {
      ]
  };
 
+var albumPiko = {
+    title: 'Piko TOP HITS!!!',
+    artist: 'Piko Taro',
+    label: 'Avex',
+    year: '2016',
+    albumArtUrl: 'assets/images/album_covers/15.png',
+    songs: [
+         { title: 'PPAP', duration: '2:34' },
+         { title: 'The Theme Song of Pikotaro', duration: '3:01' },
+         { title: 'Romita Hashinikov', duration: '3:01'},
+         { title: 'Kashite Kudasaiyo', duration: '2:14' },
+         { title: 'Neo Sunglasses', duration: '4:15'},
+         { title: 'PPAP vs. Axel F.', duration: '3:15'}
+    ]
+};
+
+var albumList = [albumPicasso, albumMarconi, albumPiko];
   var createSongRow = function(songNumber, songName, songLength) {
      var template =
         '<tr class="album-view-song-item">'
@@ -64,3 +81,10 @@ var albumPicasso = {
  window.onload = function() {
      setCurrentAlbum(albumPicasso);
  };
+
+var currAlbum = 0;
+document.getElementsByClassName('album-cover-art')[0].addEventListener('click', function(event) {
+        currAlbum += 1;
+        currAlbum = currAlbum % albumList.length;
+        setCurrentAlbum(albumList[currAlbum]);
+    });
