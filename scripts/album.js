@@ -65,14 +65,17 @@ var findParentByClassName = function(element, className) {
     if (element) {
         var parent = element.parentElement;
         if (parent) { 
-            if (parent.classList.contains(className)) {
-                return parent;
-            } else {
-                return findParentByClassName(parent, className);
+            while(parent) {
+                if (parent.classList.contains(className)) {
+                    return parent;
+                }
+                parent = parent.parentElement;
             }
+            console.log("No parent found with that class name");
+        } else {
+            console.log("No parent found")
         }
     }
-    return null;
  };
 
 var getSongItem = function(element) {
