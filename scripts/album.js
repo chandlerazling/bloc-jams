@@ -22,7 +22,7 @@ var createSongRow = function(songNumber, songName, songLength) {
             $('.main-controls .play-pause').html(playerBarPlayButton);
         } else if (currentlyPlayingSongNumber !== songNumber) {
             //clicked on another song while one is playing - so switch pause button
-            var currentlyPlayingSongElement = $('[data-song-number="' + currentlyPlayingSongNumber + '"]');
+            var currentlyPlayingSongElement = getSongNumberCell(currentlyPlayingSongNumber);
             currentlyPlayingSongElement.html(currentlyPlayingSongElement.data('song-number'));
             $(this).html(pauseButtonTemplate);
             setCurrentSong(songNumber);
@@ -61,6 +61,21 @@ var setCurrentSong = function(songNumber) {
         currentSongFromAlbum = currentAlbum.songs[songNumber-1];
     }   
 }
+
+/** Go to next or previous song. i should be -1 or 1 */
+var changeCurrentSong = function(i) {
+    var newSongNumber = currentlyPlayingSongNumber + i;
+    if (newSongNumber <= 0) {
+        newSongNumber = currentAlbum.songs.length;
+    } else if (newSongNumber > currentAlbum.songs.length) {
+        newSongNumber = 1;
+    }
+    setCurrentSong(newSongNumber);
+}
+
+var getSongNumberCell = function(number) {
+    return $('[data-song-number="' + number + '"]');
+}
 var setCurrentAlbum = function(album) {
     currentAlbum = album;
     var $albumTitle = $('.album-view-title');
@@ -82,43 +97,27 @@ var setCurrentAlbum = function(album) {
     
 }};
 
-function mod(x,y) {
-    if (x < 0) {
-        return x % y + y;
-    }
-    else {
-        return x % y;
-    }
-}
+
 var trackIndex = function(album, song) {
     return album.songs.indexOf(song);
 }
 
 
 var nextSong = function() {
-    var currentlyPlayingSongElement = $('[data-song-number="' + currentlyPlayingSongNumber + '"]');
+    var currentlyPlayingSongElement = getSongNumberCell(currentlyPlayingSongNumber);
     currentlyPlayingSongElement.html(currentlyPlayingSongElement.data('song-number'));
-    currentSongFromAlbum = currentAlbum.songs[mod((trackIndex(currentAlbum, currentSongFromAlbum) + 1), currentAlbum.songs.length)];
+    changeCurrentSong(1);
     updatePlayerBarSong();
-    currentlyPlayingSongNumber = mod((currentlyPlayingSongNumber + 1), currentAlbum.songs.length);
-    if (currentlyPlayingSongNumber == 0) {
-        currentlyPlayingSongNumber = currentAlbum.songs.length;
-    }
-    currentlyPlayingSongElement = $('[data-song-number="' + currentlyPlayingSongNumber + '"]');
+    currentlyPlayingSongElement = getSongNumberCell(currentlyPlayingSongNumber);
     currentlyPlayingSongElement.html(pauseButtonTemplate);
-
 }
 
 var previousSong = function() {
-    var currentlyPlayingSongElement = $('[data-song-number="' + currentlyPlayingSongNumber + '"]');
+    var currentlyPlayingSongElement = getSongNumberCell(currentlyPlayingSongNumber);
     currentlyPlayingSongElement.html(currentlyPlayingSongElement.data('song-number'));
-    currentSongFromAlbum = currentAlbum.songs[mod((trackIndex(currentAlbum, currentSongFromAlbum) - 1), currentAlbum.songs.length)];
+    changeCurrentSong(-1);
     updatePlayerBarSong();
-    currentlyPlayingSongNumber = mod((currentlyPlayingSongNumber - 1), currentAlbum.songs.length);
-    if (currentlyPlayingSongNumber == 0) {
-        currentlyPlayingSongNumber = currentAlbum.songs.length;
-    }
-    currentlyPlayingSongElement = $('[data-song-number="' + currentlyPlayingSongNumber + '"]');
+    currentlyPlayingSongElement = getSongNumberCell(currentlyPlayingSongNumber);
     currentlyPlayingSongElement.html(pauseButtonTemplate);
 }
 
